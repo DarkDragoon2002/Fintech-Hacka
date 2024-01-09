@@ -1,5 +1,5 @@
 import math
-from random import Random
+from random import random
 
 def random_bm(mu, sigma):
     u = 0
@@ -37,5 +37,5 @@ def calcExpImpLoss(rangePerc, mu, sigma) :
         Vhsum += 1 + _px
         impLossSum += calcImpLoss(lowerPx, upperPx, _px)
     
-    return (impLossSum/iterations)/(Vhsum/iterations)
+    return (impLossSum/iterations)/(Vhsum/iterations)*100
 
