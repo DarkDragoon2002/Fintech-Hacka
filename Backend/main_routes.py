@@ -36,14 +36,26 @@ def predict_impermanent_loss():
 
 @main.route('/predict_eth_price_arima', methods=['GET'])
 def predict_eth_price_arima():
-    notebook_path = 'ARIMA NUS Fintech Hack.ipynb'
-    output = execute_notebook(notebook_path)
-    return jsonify(output)
+    notebook_path = '../AIML_Models/ARIMA for API Integration.ipynb'
+    execute_notebook(notebook_path)
+    
+    with open('result.txt', 'r') as file:
+        result_content = file.read()
+        # Assuming result_content is a JSON-serializable string, convert to JSON
+        json_output = jsonify({'Predicted Price': result_content})
+    
+    return json_output
 
-@main.route('/predict_eth_price_lstm', methods=['GET'])
-def predict_eth_price_lstm():
-    notebook_path = 'LSTM.ipynb'
-    output = execute_notebook(notebook_path)
-    return jsonify(output)
+# @main.route('/predict_eth_price_lstm', methods=['GET'])
+# def predict_eth_price_lstm():
+#     notebook_path = 'LSTM.ipynb'
+#     output = execute_notebook(notebook_path)
+#     return jsonify(output)
+
+# @main.route('/predict_eth_price_multivariatelstm', methods=['GET', 'POST'])
+# def predict_eth_price_multivariatelstm():
+#     notebook_path = 'LSTM.ipynb'
+#     output = execute_notebook(notebook_path)
+#     return jsonify(output)
 
             
