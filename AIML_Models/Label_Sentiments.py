@@ -36,7 +36,7 @@ def labels_by_date(df):
     pivot_df["Sentiment"] = pivot_df.apply(lambda x: weight_average(x["Positive"], x["Negative"], x["Neutral"]), axis=1)
     return pivot_df
 
-inputFileName = "LatestNews.csv"
+inputFileName = "news2.csv"
 
 df = labels_by_date(label_news(inputFileName))
 
@@ -45,11 +45,15 @@ startdate = df['Date'].min()
 enddate = df['Date'].max()
 data = yf.download("ETH-USD", start=startdate, end=enddate)
 df = data.merge(df, how="left", on="Date")
-print(df.head())
+df = df.drop(["Adj Close"], axis=1)
+df["Date"] = df["Date"].dt.date
 
 LSTMDatasetFilepath = 'lstm_data.csv'
-df2 = pd.read_csv(LSTMDatasetFilepath)
-print(df2.head())
-# today = datetime.now()
-# outputFileName = ("LSTMOutput" + str(today)).replace(" ", "").replace(":", "-").replace(".", "") + ".csv"
-# df.to_csv(outputFileName)
+
+df2 = pd.read_csv(LSTMDatasetFilepath, index_col=0)
+df2["Date"] = pd.to_datetime(df2["Date"])
+df2["Date"] = df2["Date"].dt.date
+df = pd.concat([df2, df], axis=0)
+df[["Negative", "Neutral", "Positive", "Sentiment"]] = df[["Negative", "Neutral", "Positive", "Sentiment"]].fillna(0)
+df = df.sort_values(by=["Date"])
+df.to_csv(LSTMDatasetFilepath, index=False)
