@@ -1,6 +1,5 @@
 from nbconvert import PythonExporter
 import nbformat
-import threading
 
 def execute_notebook(notebook_path):
     with open(notebook_path, 'r', encoding='utf-8') as f:
