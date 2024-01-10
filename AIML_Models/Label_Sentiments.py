@@ -36,7 +36,7 @@ def labels_by_date(df):
     pivot_df["Sentiment"] = pivot_df.apply(lambda x: weight_average(x["Positive"], x["Negative"], x["Neutral"]), axis=1)
     return pivot_df
 
-inputFileName = "news2.csv"
+inputFileName = "LatestNews.csv"
 
 df = labels_by_date(label_news(inputFileName))
 
