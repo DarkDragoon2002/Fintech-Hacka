@@ -2,7 +2,8 @@ from flask import Flask, jsonify, request, Blueprint
 from flask_cors import CORS
 
 from .imp_loss import calcExpImpLoss
-from .exec_notebook import execute_notebook
+from .exec_notebook import execute_notebook, execute_notebook_input
+from .tasks import price_task
 
 from nbconvert import PythonExporter
 import nbformat
@@ -12,6 +13,13 @@ ca_file = certifi.where()
 
 main = Blueprint('main', __name__)
 
+# # Start the scheduled task, which is imported from the exec_noterbook.py file (change target later!)
+# def start_scheduled_task():
+#     task_thread = threading.Thread(target=task)
+#     task_thread.daemon = True  # Daemonize the thread
+#     task_thread.start()
+#     return task_thread
+
 @main.route('/', methods=['GET'])
 def index():
     return jsonify({'Message': 'Welcome to the NUS Fintech Hackathon API!'})
@@ -19,7 +27,7 @@ def index():
 @main.route('/predict_impermanent_loss', methods=['GET', 'POST'])
 def predict_impermanent_loss():
     json_data = {
-        "Message": "There is nth here get fucked!",
+        "note": "Send a POST request in JSON format with the following parameters: rangePerc: Range Percentage, mu: Mean, sigma: Standard Deviation to get the predicted Impermanent Loss!"
     }
     if request.method == 'GET':
         return jsonify(json_data)
@@ -32,30 +40,27 @@ def predict_impermanent_loss():
         sigma = json_data['sigma']
 
         impLoss = calcExpImpLoss(float(rangePerc), float(mu), float(sigma))
-        return jsonify({'Predicted Impermanent Loss': impLoss})
+        return jsonify({'Predicted Impermanent Loss': impLoss}), 200
 
 @main.route('/predict_eth_price_arima', methods=['GET'])
 def predict_eth_price_arima():
     notebook_path = '../AIML_Models/ARIMA for API Integration.ipynb'
     execute_notebook(notebook_path)
     
-    with open('result.txt', 'r') as file:
+    with open('result_arima.txt', 'r') as file:
         result_content = file.read()
-        # Assuming result_content is a JSON-serializable string, convert to JSON
         json_output = jsonify({'Predicted Price': result_content})
     
-    return json_output
+    return json_output, 200
 
-# @main.route('/predict_eth_price_lstm', methods=['GET'])
-# def predict_eth_price_lstm():
-#     notebook_path = 'LSTM.ipynb'
-#     output = execute_notebook(notebook_path)
-#     return jsonify(output)
+@main.route('/predict_eth_price_lstm', methods=['GET'])
+def predict_eth_price_lstm():
+    result = price_task.delay()
+    return jsonify({'Task': 'Triggered', 'Task ID': result.id}), 200
 
-# @main.route('/predict_eth_price_multivariatelstm', methods=['GET', 'POST'])
-# def predict_eth_price_multivariatelstm():
-#     notebook_path = 'LSTM.ipynb'
-#     output = execute_notebook(notebook_path)
-#     return jsonify(output)
+    
 
+
+
+    
             
