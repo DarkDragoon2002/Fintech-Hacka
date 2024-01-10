@@ -9,12 +9,14 @@ Features
 
 Scheduled Task: The API supports scheduled tasks, demonstrated in the /task endpoint, showcasing a continuous background task.
 
-Explore the various endpoints like /predict_impermanent_loss, /predict_eth_price_arima, and /predict_eth_price_lstm. Schedule tasks (for the LSTM model as it requires more processing and a longer duration) using /task.
+Explore the various endpoints like /predict_impermanent_loss, /predict_eth_price_arima, and /predict_eth_price_lstm. Schedule tasks (for the LSTM model as it requires more processing and a longer duration) using asynchronous task scheduling.
 
-Dependencies
+Main Dependencies for Backend:
 Flask: Web framework for building the API.
 Celery: Distributed task queue for handling asynchronous tasks.
-ARIMA and LSTM Models: Machine learning models for predicting Ethereum prices.
-Configuration
-Configure Celery by updating the CELERY settings in __init__.py.
-Adjust model paths and configurations in respective model files.
+RabbitMQ: Message broker for Celery.
+CORS: Cross-Origin Resource Sharing for handling cross-origin requests.
+Certifi: Certificates for SSL verification.
+NBconvert: Convert Jupyter Notebooks to Python scripts.
+NBFormat: Format Jupyter Notebooks.
+PythonEnv: Python virtual environment.
