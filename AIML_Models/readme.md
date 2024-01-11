@@ -8,3 +8,10 @@
     - Performs Sentiment Analysis on the latest news
     - Performs data processing
     - Adds it to the lstm_data.csv file in a correct format which can easily be used to train the LSTM.
+6. finetuning_finbert_model.py is the python script we used to finetune the sentiment analysis model
+
+HOW TO USE:
+    - Run GetNews.py, which will generate a CSV file "LatestNews" with columns date and text
+    - Run Label_Sentiments.py, which will update the lstm_data.csv file with the sentiments for today
+    - lstm_data.csv can be passed into multivariateLSTM_withSentiment for prediction of actual price
+    
